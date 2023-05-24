@@ -17,18 +17,39 @@ class ImageQuestion (BaseModel):
     question: str
 
 
-@app.post("/describe-image")
-async def describe_image(image_data: ImageURL):
-    response = requests.post(
-        "http://1689-34-143-171-130.ngrok-free.app",
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-        data={"image_url": image_data.image_url},
-    )
+@app.post("/blip2")
+async def blip2(image_data: ImageURL):
+    # Verifica si se proporcionó la URL de la imagen
+    if not image_data.image_url:
+        return JSONResponse(content={"error": "No se proporcionó ninguna URL de imagen."})
 
-    if response.status_code != 200:
-        raise HTTPException(status_code=response.status_code, detail="Error")
+    try:
+        # Intenta hacer una solicitud POST a tu servidor local
+        response = requests.post(
+            "http://fc6a-35-243-150-66.ngrok-free.app/blip2",
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data={"image_url": image_data.image_url},
+        )
 
-    return JSONResponse(content=response.json())
+        # Verifica si la respuesta tiene un código de estado 200
+        if response.status_code != 200:
+            return JSONResponse(content={"error": f"El servidor local devolvió un código de estado {response.status_code}."})
+
+        # Intenta decodificar la respuesta como JSON
+        response_data = response.json()
+
+    except requests.RequestException as e:
+        # Si hay un error en la solicitud, devuelve un mensaje de error
+        return JSONResponse(content={"error": f"Hubo un error en la solicitud: {str(e)}."})
+
+    except json.JSONDecodeError as e:
+        # Si hay un error al decodificar la respuesta como JSON, devuelve un mensaje de error
+        return JSONResponse(content={"error": f"Hubo un error al decodificar la respuesta como JSON: {str(e)}."})
+
+    # Si todo va bien, devuelve la respuesta del servidor local
+    return JSONResponse(content=response_data)
+
+
 
 
 @app.post("/blip2_question")
@@ -43,7 +64,7 @@ async def blip2_question(image_question: ImageQuestion):
         return JSONResponse(content={"error": "No se proporcionó ninguna pregunta"})
 
     response = requests.post(
-        "http://1689-34-143-171-130.ngrok-free.app/blip2_question",
+        "http://fc6a-35-243-150-66.ngrok-free.app/blip2_question",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         data={"image_url": image_url, "question": question},
     )
