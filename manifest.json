@@ -2,16 +2,18 @@
   "schema_version": "v1",
   "name_for_human": "BLIP 2 gpt",
   "name_for_model": "BLIP_2_app_gpt",
-  "description_for_human": "Aplicación que describe cualquier imagen dada con una url",
-  "description_for_model": "Plugin que dada la url de una imagen, se obtiene una descripción detallada de su contenido en inglés. Además la API te permitira hacer una pregunta en inglés sobre el contenido de una imagen y esta se traduce a inglés al realizar la llamada con la url.",
+  "description_for_human": "Aplicación que responde a preguntas específicas sobre el contenido de una imagen dada con una URL",
+  "description_for_model": ["Plugin que, dada la URL de una imagen, responde a una pregunta específica en inglés sobre el ",
+  "contenido de la imagen. La pregunta y la URL de la imagen son necesarias para realizar la llamada a la API.",
+  "Aseguráte de llamar con el endpoint correcto. '/blip2' solo necesita url y '/blip2_question' necesita url y pregunta"],
   "auth": {
     "type": "none"
   },
   "api": {
-    "type" : "openapi",
+    "type": "openapi",
     "url": "/openapi.json"
-    },
+  },
   "logo_url": "https://img.icons8.com/?size=512&id=AMX2ka1F4SiY&format=png",
   "legal_info_url": "https://example.com/legal",
-  "contact_email": "contactraul@example.com"
+  "contact_email": "contact@example.com"
 }
